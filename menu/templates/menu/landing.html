@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>انتخاب منو</title>
+    <style>
+        body { font-family: Tahoma, Arial, sans-serif; text-align: center; padding: 50px 20px; }
+        .menu-btn { display: block; width: 200px; margin: 20px auto; padding: 15px; background: #333; color: #fff; text-decoration: none; border-radius: 8px; font-size: 18px; }
+        .menu-btn:hover { background: #555; }
+    </style>
+</head>
+<body>
+    <h1>به کافه ما خوش آمدید</h1>
+    <p>لطفاً منوی مورد نظر خود را انتخاب کنید:</p>
+    
+    <!-- Link to VIP menu -->
+    <a href="{% url 'menu:menu_list' menu_type='vip' %}" class="menu-btn">منوی تخصصی (VIP)</a>
+    
+    <!-- Link to ECO menu -->
+    <a href="{% url 'menu:menu_list' menu_type='eco' %}" class="menu-btn">منوی اقتصادی (ECO)</a>
+</body>
+</html>

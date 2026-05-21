@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منوی {{ current_menu_type }}</title>
+    <style>
+        body { font-family: Tahoma, Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+        .category { margin-top: 30px; border-bottom: 2px solid #ccc; padding-bottom: 5px; }
+        .menu-item { display: flex; justify-content: space-between; margin: 10px 0; border-bottom: 1px dashed #eee; padding-bottom: 10px; }
+        .item-details { display: flex; flex-direction: column; }
+        .item-title { font-weight: bold; }
+        .item-desc { font-size: 12px; color: #666; margin-top: 4px; }
+        .item-price { font-weight: bold; color: #27ae60; }
+        .back-link { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #2980b9; }
+    </style>
+</head>
+<body>
+    <a href="{% url 'menu:landing' %}" class="back-link">← بازگشت به انتخاب منو</a>
+    
+    <h1>منوی {% if current_menu_type == 'VIP' %}تخصصی{% else %}اقتصادی{% endif %}</h1>
+
+    {% for category in categories %}
+        <!-- Check if category has any items in THIS specific menu_type -->
+        {% if category.menuitem_set.all %}
+            <div class="category">
+                <h2>{{ category.title }}</h2>
+                {% if category.description %}
+                    <p style="font-size: 13px; color: #777;">{{ category.description }}</p>
+                {% endif %}
+            </div>
+
+            <div class="items">
+                <!-- Uses the prefetched and filtered data -->
+                {% for item in category.menuitem_set.all %}
+                    <div class="menu-item">
+                        <div class="item-details">
+                            <span class="item-title">{{ item.title }}</span>
+                            {% if item.description %}
+                                <span class="item-desc">{{ item.description }}</span>
+                            {% endif %}
+                        </div>
+                        <span class="item-price">{{ item.price }} تومان</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% empty %}
+        <p>در حال حاضر آیتمی در این منو وجود ندارد.</p>
+    {% endfor %}
+
+</body>
+</html>
