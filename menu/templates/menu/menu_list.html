@@ -1,52 +1,176 @@
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منوی {{ current_menu_type }}</title>
+    <title>منوی {% if current_menu_type == 'VIP' %}تخصصی{% else %}روزمره و کلاسیک{% endif %}</title>
     <style>
-        body { font-family: Tahoma, Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; }
-        .category { margin-top: 30px; border-bottom: 2px solid #ccc; padding-bottom: 5px; }
-        .menu-item { display: flex; justify-content: space-between; margin: 10px 0; border-bottom: 1px dashed #eee; padding-bottom: 10px; }
-        .item-details { display: flex; flex-direction: column; }
-        .item-title { font-weight: bold; }
-        .item-desc { font-size: 12px; color: #666; margin-top: 4px; }
-        .item-price { font-weight: bold; color: #27ae60; }
-        .back-link { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #2980b9; }
+        :root {
+            --font-main: system-ui, -apple-system, Tahoma, Arial, sans-serif;
+        }
+
+        body.theme-vip {
+            --bg-body: #121212;
+            --bg-card: #1e1e1e;
+            --text-main: #f5f5f5;
+            --text-muted: #a0a0a0;
+            --accent: #d4af37; /* طلایی */
+            --border-color: #333;
+        }
+
+        body.theme-eco {
+    --bg-body: #e8d888;
+            --bg-card: #ffffff;
+            --text-main: #2c3e50;
+            --text-muted: #7f8c8d;
+            --accent: #bda43b; /* رنگ کاهی تیره‌تر برای خوانایی عناوین */
+            --border-color: #eae1b3;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+            line-height: 1.6;
+            transition: background-color 0.3s;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* وسط‌چین کردن هدر */
+            position: relative;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--accent);
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 14px;
+            position: absolute;
+            right: 0; /* دکمه بازگشت در سمت راست ثابت بماند */
+        }
+
+        .page-title {
+            color: var(--accent);
+            font-size: 24px;
+            text-align: center; /* وسط‌چین */
+        }
+
+        .category-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px; /* گوشه‌های گردتر */
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .category-header {
+            margin-bottom: 20px;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 10px;
+            text-align: center; /* وسط‌چین کردن عناوین دسته‌بندی */
+        }
+
+        .category-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .category-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .menu-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .item-details {
+            flex: 1;
+            padding-left: 15px;
+        }
+
+        .item-title {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .item-desc {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        .item-price {
+            font-weight: bold;
+            font-size: 15px;
+            color: var(--text-main);
+            white-space: nowrap;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: var(--text-muted);
+            margin-top: 50px;
+        }
     </style>
 </head>
-<body>
-    <a href="{% url 'menu:landing' %}" class="back-link">← بازگشت به انتخاب منو</a>
-    
-    <h1>منوی {% if current_menu_type == 'VIP' %}تخصصی{% else %}اقتصادی{% endif %}</h1>
+<body class="{% if current_menu_type == 'VIP' %}theme-vip{% else %}theme-eco{% endif %}">
+
+    <div class="header">
+        <a href="{% url 'menu:landing' %}" class="back-link">بازگشت ➔</a>
+        <h1 class="page-title">منوی {% if current_menu_type == 'VIP' %}تخصصی{% else %}روزمره و کلاسیک{% endif %}</h1>
+    </div>
 
     {% for category in categories %}
-        <!-- Check if category has any items in THIS specific menu_type -->
         {% if category.menuitem_set.all %}
-            <div class="category">
-                <h2>{{ category.title }}</h2>
-                {% if category.description %}
-                    <p style="font-size: 13px; color: #777;">{{ category.description }}</p>
-                {% endif %}
-            </div>
+            <div class="category-card">
+                <div class="category-header">
+                    <h2 class="category-title">{{ category.title }}</h2>
+                    {% if category.description %}
+                        <p class="category-desc">{{ category.description }}</p>
+                    {% endif %}
+                </div>
 
-            <div class="items">
-                <!-- Uses the prefetched and filtered data -->
-                {% for item in category.menuitem_set.all %}
-                    <div class="menu-item">
-                        <div class="item-details">
-                            <span class="item-title">{{ item.title }}</span>
-                            {% if item.description %}
-                                <span class="item-desc">{{ item.description }}</span>
-                            {% endif %}
+                <div class="items">
+                    {% for item in category.menuitem_set.all %}
+                        <div class="menu-item">
+                            <div class="item-details">
+                                <span class="item-title">{{ item.title }}</span>
+                                {% if item.description %}
+                                    <span class="item-desc">{{ item.description }}</span>
+                                {% endif %}
+                            </div>
+                            <span class="item-price">{{ item.price|intcomma }} تومان</span>
                         </div>
-                        <span class="item-price">{{ item.price }} تومان</span>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
         {% endif %}
     {% empty %}
-        <p>در حال حاضر آیتمی در این منو وجود ندارد.</p>
+        <p class="empty-state">در حال حاضر آیتمی در این منو وجود ندارد.</p>
     {% endfor %}
 
 </body>
