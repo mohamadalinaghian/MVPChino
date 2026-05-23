@@ -23,7 +23,7 @@ def menu_list_view(request, menu_type):
 
     # Prefetch only active and visible items that match the selected menu_type
     items_prefetch = Prefetch(
-        "menuitem_set",
+        "items",
         queryset=MenuItem.objects.filter(
             is_active=True, show_in_menu=True, menu_type=menu_type_upper
         ).order_by("order"),

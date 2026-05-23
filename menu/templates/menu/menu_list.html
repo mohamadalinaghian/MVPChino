@@ -141,7 +141,23 @@
 
     <div class="header">
         <a href="{% url 'menu:landing' %}" class="back-link">بازگشت ➔</a>
-        <h1 class="page-title">منوی {% if current_menu_type == 'VIP' %}تخصصی{% else %}روزمره و کلاسیک{% endif %}</h1>
+<!-- Dynamic Menu Title -->
+<h1 class="page-title">
+    {% if current_menu_type == 'VIP' %}
+        چینوِ امضا <span class="en-title">(Chino Signature)</span>
+    {% else %}
+        چینوِ روزمره <span class="en-title">(Chino Everyday)</span>
+    {% endif %}
+</h1>
+
+<!-- Dynamic Menu Description -->
+<p class="menu-description">
+    {% if current_menu_type == 'VIP' %}
+        تجربه‌ای خاص از طعم‌های تخصصی، لاین قهوه‌های تک‌خاستگاه و رسپی‌های انحصاری شف چینو.
+    {% else %}
+        آیتم‌های محبوب، سریع و اقتصادی؛ مناسب برای استفاده روزانه و دورهمی‌های دوستانه.
+    {% endif %}
+</p>
     </div>
 
     {% for category in categories %}
