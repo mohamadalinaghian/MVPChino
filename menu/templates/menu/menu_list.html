@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منوی {% if current_menu_type == 'VIP' %}تخصصی{% else %}روزمره و کلاسیک{% endif %}</title>
+    <title>منوی {% if current_menu_type == 'VIP' %}تخصصی{% else %}روزمره{% endif %}</title>
     <style>
         :root {
             --font-main: system-ui, -apple-system, Tahoma, Arial, sans-serif;
@@ -15,17 +15,23 @@
             --bg-card: #1e1e1e;
             --text-main: #f5f5f5;
             --text-muted: #a0a0a0;
-            --accent: #d4af37; /* طلایی */
+            --accent: #d4af37; /* Gold */
             --border-color: #333;
+            --btn-switch-bg: #1e1e1e;
+            --btn-switch-border: #d4af37;
+            --btn-switch-text: #d4af37;
         }
 
         body.theme-eco {
-    --bg-body: #e8d888;
+            --bg-body: #e8d888; /* Straw yellow */
             --bg-card: #ffffff;
             --text-main: #2c3e50;
             --text-muted: #7f8c8d;
-            --accent: #bda43b; /* رنگ کاهی تیره‌تر برای خوانایی عناوین */
+            --accent: #bda43b; /* Darker straw for readability */
             --border-color: #eae1b3;
+            --btn-switch-bg: #2c3e50;
+            --btn-switch-border: #2c3e50;
+            --btn-switch-text: #ffffff;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -41,34 +47,62 @@
             transition: background-color 0.3s;
         }
 
+        /* Optimized Header for Mobile */
         .header {
             display: flex;
             align-items: center;
-            justify-content: center; /* وسط‌چین کردن هدر */
-            position: relative;
-            margin-bottom: 30px;
+            justify-content: space-between;
+            margin-bottom: 25px;
             padding-bottom: 15px;
             border-bottom: 1px solid var(--accent);
+            gap: 15px;
         }
 
-        .back-link {
-            text-decoration: none;
-            color: var(--text-muted);
-            font-size: 14px;
-            position: absolute;
-            right: 0; /* دکمه بازگشت در سمت راست ثابت بماند */
+        .title-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
         .page-title {
             color: var(--accent);
-            font-size: 24px;
-            text-align: center; /* وسط‌چین */
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .en-title {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: normal;
+            font-family: sans-serif;
+            margin-top: 2px;
+        }
+
+        /* Elegant menu switch button */
+        .switch-menu-btn {
+            text-decoration: none;
+            background-color: var(--btn-switch-bg);
+            border: 2px solid var(--btn-switch-border);
+            color: var(--btn-switch-text);
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: transform 0.2s, opacity 0.2s;
+            white-space: nowrap;
+        }
+
+        .switch-menu-btn:active {
+            transform: scale(0.95);
         }
 
         .category-card {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 20px; /* گوشه‌های گردتر */
+            border-radius: 20px;
             padding: 20px;
             margin-bottom: 25px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
@@ -78,17 +112,17 @@
             margin-bottom: 20px;
             border-bottom: 1px dashed var(--border-color);
             padding-bottom: 10px;
-            text-align: center; /* وسط‌چین کردن عناوین دسته‌بندی */
+            text-align: center;
         }
 
         .category-title {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: bold;
             color: var(--accent);
         }
 
         .category-desc {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-muted);
             margin-top: 5px;
         }
@@ -113,19 +147,19 @@
 
         .item-title {
             font-weight: bold;
-            font-size: 16px;
+            font-size: 15px;
         }
 
         .item-desc {
             display: block;
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-muted);
             margin-top: 5px;
         }
 
         .item-price {
             font-weight: bold;
-            font-size: 15px;
+            font-size: 14px;
             color: var(--text-main);
             white-space: nowrap;
         }
@@ -139,29 +173,41 @@
 </head>
 <body class="{% if current_menu_type == 'VIP' %}theme-vip{% else %}theme-eco{% endif %}">
 
+    <!-- Header Section -->
     <div class="header">
-        <a href="{% url 'menu:landing' %}" class="back-link">بازگشت ➔</a>
-<!-- Dynamic Menu Title -->
-<h1 class="page-title">
-    {% if current_menu_type == 'VIP' %}
-        چینوِ امضا <span class="en-title">(Chino Signature)</span>
-    {% else %}
-        چینوِ روزمره <span class="en-title">(Chino Everyday)</span>
-    {% endif %}
-</h1>
+        <!-- Brand Title Info -->
+        <div class="title-container">
+            <h1 class="page-title">
+                {% if current_menu_type == 'VIP' %}
+                    امضاء چینو
+                {% else %}
+                    چینوِ روزمره
+                {% endif %}
+            </h1>
+            <span class="en-title">
+                {% if current_menu_type == 'VIP' %}
+                    Chino Signature
+                {% else %}
+                    Chino Everyday
+                {% endif %}
+            </span>
+        </div>
 
-<!-- Dynamic Menu Description -->
-<p class="menu-description">
-    {% if current_menu_type == 'VIP' %}
-        تجربه‌ای خاص از طعم‌های تخصصی، لاین قهوه‌های تک‌خاستگاه و رسپی‌های انحصاری شف چینو.
-    {% else %}
-        آیتم‌های محبوب، سریع و اقتصادی؛ مناسب برای استفاده روزانه و دورهمی‌های دوستانه.
-    {% endif %}
-</p>
+        <!-- Dynamic Menu Switcher Button -->
+        {% if current_menu_type == 'VIP' %}
+            <a href="{% url 'menu:menu_list' menu_type='eco' %}" class="switch-menu-btn">
+                منوی روزمره ⇄
+            </a>
+        {% else %}
+            <a href="{% url 'menu:menu_list' menu_type='vip' %}" class="switch-menu-btn">
+                منوی امضاء ⇄
+            </a>
+        {% endif %}
     </div>
 
+    <!-- Category Loop (Using corrected prefetched relation: .items.all) -->
     {% for category in categories %}
-        {% if category.menuitem_set.all %}
+        {% if category.items.all %}
             <div class="category-card">
                 <div class="category-header">
                     <h2 class="category-title">{{ category.title }}</h2>
@@ -171,7 +217,7 @@
                 </div>
 
                 <div class="items">
-                    {% for item in category.menuitem_set.all %}
+                    {% for item in category.items.all %}
                         <div class="menu-item">
                             <div class="item-details">
                                 <span class="item-title">{{ item.title }}</span>

@@ -10,8 +10,8 @@
         --black: #121212;
         --dark-gray: #1e1e1e;
         --text-light: #f5f5f5;
-        --rich-green: #0a3a2a; /* سبز پولداری */
-        --straw-yellow: #e8d888; /* زرد کاهی */
+        --rich-green: #0a3a2a; /* Premium green */
+        --straw-yellow: #e8d888; /* Soft yellow */
       }
 
       * {
@@ -37,7 +37,10 @@
         padding: 20px;
       }
 
+      /* Animated shine effect wrapper */
       .brand-frame {
+        position: relative;
+        overflow: hidden;
         border: 2px solid var(--gold);
         padding: 25px 40px;
         text-align: center;
@@ -49,12 +52,44 @@
         max-width: 500px;
       }
 
+      /* Subtle shimmer light effect moving from right to left */
+      .brand-frame::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: -150%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(212, 175, 55, 0.15),
+          transparent
+        );
+        transform: skewX(-25deg);
+        animation: shimmer-light 4s infinite linear;
+      }
+
+      @keyframes shimmer-light {
+        0% {
+          right: -150%;
+        }
+        50% {
+          right: 150%;
+        }
+        100% {
+          right: 150%;
+        }
+      }
+
       .brand-frame h1 {
         color: var(--gold);
-        font-size: 28px;
+        font-size: 26px;
         font-weight: bold;
         letter-spacing: 1px;
         text-align: center;
+        position: relative;
+        z-index: 1;
       }
 
       .instruction {
@@ -62,16 +97,17 @@
         font-size: 16px;
         margin-bottom: 40px;
         text-align: center;
+        line-height: 1.6;
       }
 
       .menu-options {
         display: flex;
-        flex-direction: row; /* چیدمان افقی */
+        flex-direction: row;
         justify-content: center;
         gap: 20px;
         width: 100%;
         max-width: 600px;
-        flex-wrap: wrap; /* برای صفحه‌های خیلی کوچک موبایل */
+        flex-wrap: wrap;
       }
 
       .menu-btn {
@@ -79,14 +115,12 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 15px;
+        gap: 10px;
         flex: 1;
-        min-width: 200px;
-        padding: 35px 20px; /* کادر گرد و تپل */
+        min-width: 250px;
+        padding: 35px 25px;
         text-decoration: none;
-        border-radius: 35px; /* گوشه‌های کاملا گرد */
-        font-size: 18px;
-        font-weight: bold;
+        border-radius: 50px; /* Enhanced rounded corners */
         text-align: center;
         transition:
           transform 0.3s ease,
@@ -115,18 +149,92 @@
         width: 45px;
         height: 45px;
         fill: currentColor;
+        margin-bottom: 5px;
+      }
+
+      .btn-title {
+        font-size: 20px;
+        font-weight: bold;
+        display: block;
+      }
+
+      .en-btn-title {
+        display: block;
+        font-size: 14px;
+        margin-top: 4px;
+        opacity: 0.9;
+        font-family: sans-serif;
+        font-weight: normal;
+      }
+
+      .btn-desc {
+        font-size: 13px;
+        margin-top: 10px;
+        line-height: 1.5;
+        opacity: 0.85;
+      }
+
+      .btn-vip .btn-desc {
+        color: #e0e0e0;
+      }
+
+      .btn-eco .btn-desc {
+        color: #34495e;
+      }
+
+      /* Mobile responsiveness optimizations */
+      @media (max-width: 600px) {
+        body {
+          padding: 15px;
+        }
+        
+        .brand-frame {
+          padding: 20px 25px;
+          margin-bottom: 20px;
+        }
+
+        .brand-frame h1 {
+          font-size: 22px;
+        }
+
+        .instruction {
+          font-size: 15px;
+          margin-bottom: 30px;
+        }
+
+        .menu-options {
+          flex-direction: column; /* Stacks buttons on mobile */
+          gap: 15px;
+        }
+
+        .menu-btn {
+          width: 100%;
+          padding: 30px 20px;
+          border-radius: 40px;
+        }
+
+        .btn-title {
+          font-size: 18px;
+        }
+
+        .en-btn-title {
+          font-size: 13px;
+        }
       }
     </style>
   </head>
   <body>
+    <!-- Brand Header Frame -->
     <div class="brand-frame">
-      <h1>کافه تخصصی ما</h1>
+      <h1>به کافه چینو خوش آمدید</h1>
     </div>
 
+    <!-- Instruction Subtitle -->
     <p class="instruction">
-      لطفاً برای مشاهده آیتم‌ها، سبک منوی خود را انتخاب کنید.
+      برای امروز چطور پذیرای شما باشیم؟
     </p>
 
+    <!-- Menu Option Buttons -->
     <div class="menu-options">
       <!-- VIP / Signature Button -->
       <a
@@ -136,10 +244,9 @@
         <svg class="icon" viewBox="0 0 24 24">
           <path d="M12 2L15 9H22L16 14L18 21L12 17L6 21L8 14L2 9H9L12 2Z" />
         </svg>
-        <span class="btn-title"
-          >چینوِ امضا <span class="en-btn-title">(Chino Signature)</span></span
-        >
-        <small class="btn-desc">لاین قهوه‌های تخصصی و رسپی‌های خاص شف</small>
+        <span class="btn-title">امضاء چینو</span>
+        <span class="en-btn-title">Chino Signature</span>
+        <small class="btn-desc">عطر و طعمی منحصر به فرد به روایت چینو</small>
       </a>
 
       <!-- ECO / Everyday Button -->
@@ -152,12 +259,9 @@
             d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z"
           />
         </svg>
-        <span class="btn-title"
-          >چینوِ روزمره <span class="en-btn-title">(Chino Everyday)</span></span
-        >
-        <small class="btn-desc"
-          >آیتم‌های محبوب، سریع و مناسب دورهمی‌های طولانی</small
-        >
+        <span class="btn-title">چینوِ روزمره</span>
+        <span class="en-btn-title">Chino Everyday</span>
+        <small class="btn-desc">همان همیشگی ها، تکراری لذت بخش و مناسب دورهمی های طولانی</small>
       </a>
     </div>
   </body>

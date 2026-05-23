@@ -21,7 +21,7 @@ def menu_list_view(request, menu_type):
     if menu_type_upper not in valid_menu_types:
         raise Http404("Menu type not found.")
 
-    # Prefetch only active and visible items that match the selected menu_type
+    # Prefetch active items matching the selected menu_type using the 'items' relation
     items_prefetch = Prefetch(
         "items",
         queryset=MenuItem.objects.filter(
@@ -29,7 +29,7 @@ def menu_list_view(request, menu_type):
         ).order_by("order"),
     )
 
-    # Fetch active categories and attach the prefetched filtered items (Only 2 DB queries)
+    # Fetch active categories and prefetch related filtered items (Efficient 2-query fetch)
     categories = (
         Category.objects.filter(is_active=True)
         .prefetch_related(items_prefetch)
