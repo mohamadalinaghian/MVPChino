@@ -6,7 +6,7 @@ from ordered_model.models import OrderedModel
 class Category(OrderedModel):
     title = models.CharField(max_length=64, verbose_name=_("Title"))
     description = models.CharField(
-        max_length=256, null=True, blank=True, verbose_name=_("Description")
+        max_length=512, null=True, blank=True, verbose_name=_("Description")
     )
     is_active = models.BooleanField(
         default=True, db_index=True, verbose_name=_("Is Active")
