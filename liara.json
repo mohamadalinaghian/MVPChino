@@ -1,11 +1,11 @@
 {
-  "app": "chino",
   "port": 80,
-  "django": {
-    "pythonVersion": "3.13"
-  },
+  "platform": "django",
+  "app": "chino",
   "build": {
     "location": "iran"
   },
-  "disks": []
+  "django": {
+    "pythonVersion": "3.12"
+  }
 }
