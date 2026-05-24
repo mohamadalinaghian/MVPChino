@@ -4,7 +4,6 @@ __pycache__/
 *$py.class
 
 # Django migrations
-**/migrations/
 **/migrations/*.py
 !**/migrations/__init__.py
 
