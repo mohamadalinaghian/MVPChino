@@ -28,7 +28,7 @@ class MenuItem(OrderedModel):
         default=True, db_index=True, verbose_name=_("Is Active")
     )
     description = models.CharField(
-        max_length=256, null=True, blank=True, verbose_name=_("Description")
+        max_length=1024, null=True, blank=True, verbose_name=_("Description")
     )
 
     order_with_respect_to = "category"
