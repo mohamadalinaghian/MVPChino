@@ -27,9 +27,7 @@ class MenuItem(OrderedModel):
     is_active = models.BooleanField(
         default=True, db_index=True, verbose_name=_("Is Active")
     )
-    description = models.CharField(
-        max_length=1024, null=True, blank=True, verbose_name=_("Description")
-    )
+    description = models.TextField(null=True, blank=True, verbose_name=_("Description"))
 
     order_with_respect_to = "category"
 
