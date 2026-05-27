@@ -12,3 +12,7 @@ class OrderItem(models.Model):
     class Meta:
         verbose_name = "Order Item"
         verbose_name_plural = "Order Items"
+
+    @property
+    def line_total(self):
+        return self.quantity * self.unit_price_snapshot

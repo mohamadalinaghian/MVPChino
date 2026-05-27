@@ -2,12 +2,6 @@ import uuid
 from django.db import models
 
 
-class OrderStatus(models.TextChoices):
-    OPEN = "OPEN", "Open"
-    PAID = "PAID", "Paid"
-    CANCELLED = "CANCELLED", "Cancelled"
-
-
 class Table(models.Model):
     name = models.CharField(max_length=50, unique=True)
 
@@ -16,6 +10,11 @@ class Table(models.Model):
 
 
 class Order(models.Model):
+    class OrderStatus(models.TextChoices):
+        OPEN = "OPEN", "Open"
+        PAID = "PAID", "Paid"
+        CANCELLED = "CANCELLED", "Cancelled"
+
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     table = models.ForeignKey(
