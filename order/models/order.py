@@ -20,7 +20,8 @@ class Order(models.Model):
     table = models.ForeignKey(
         Table, on_delete=models.SET_NULL, null=True, blank=True, related_name="orders"
     )
-    order_number = models.PositiveIntegerField(null=True, blank=True)
+    daily_number = models.PositiveIntegerField(null=True, blank=True)
+    is_takeaway = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     total_price = models.PositiveBigIntegerField(default=0)
