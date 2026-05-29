@@ -2,9 +2,9 @@ from django.db import models
 
 
 class OrderItem(models.Model):
-    order = models.ForeignKey("order.Order", on_delete=models.CASCADE)
+    order = models.ForeignKey("order.Order", on_delete=models.CASCADE, related_name='items')
     item = models.ForeignKey(
-        "menu.MenuItem", on_delete=models.SET_NULL, null=True, blank=True
+        "menu.MenuItem", on_delete=models.SET_NULL, null=True, blank=True, related_name='orderitems'
     )
     unit_price_snapshot = models.PositiveIntegerField()
     quantity = models.PositiveSmallIntegerField()
