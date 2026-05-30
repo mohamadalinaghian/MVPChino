@@ -1,0 +1,211 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رسید - سفارش #{{ order.daily_number }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .receipt-container {
+            max-width: 300px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .receipt-header {
+            text-align: center;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .shop-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .receipt-meta {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .receipt-body {
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 8px;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 5px;
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            padding: 6px 0;
+            border-bottom: 1px dotted #ccc;
+        }
+
+        .item-row:last-child {
+            border-bottom: none;
+        }
+
+        .item-name {
+            flex: 1;
+            text-align: right;
+        }
+
+        .item-qty {
+            margin: 0 10px;
+            text-align: center;
+            min-width: 30px;
+        }
+
+        .item-price {
+            text-align: left;
+            min-width: 60px;
+            font-weight: bold;
+        }
+
+        .receipt-footer {
+            border-top: 2px solid #333;
+            border-bottom: 1px dashed #333;
+            padding: 10px 0;
+            margin-bottom: 15px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            padding: 6px 0;
+        }
+
+        .total-label {
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .total-amount {
+            text-align: left;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .thank-you {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #333;
+            color: #333;
+        }
+
+        .order-target {
+            background-color: #f0f0f0;
+            padding: 8px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 11px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            .receipt-container {
+                max-width: 80mm;
+                padding: 10px;
+                box-shadow: none;
+                border: none;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt-container">
+        <!-- Header -->
+        <div class="receipt-header">
+            <div class="shop-name">☕ کافه چینو</div>
+            <div class="receipt-meta">
+                شماره سفارش: #{{ order.daily_number }}<br>
+                تاریخ: {{ order.created_at|date:"Y-m-d H:i" }}<br>
+                {% if order.is_takeaway %}
+                    <span style="color: #d4af37; font-weight: bold;">🛍️ خودرویی</span>
+                {% else %}
+                    <span style="color: #28a745; font-weight: bold;">🪑 میز {{ order.table.name }}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Order Target Badge -->
+        <div class="order-target">
+            {% if order.is_takeaway %}
+                سفارش خودرویی
+            {% else %}
+                میز: {{ order.table.name }}
+            {% endif %}
+        </div>
+
+        <!-- Items -->
+        <div class="receipt-body">
+            <div class="section-title">اقلام سفارش</div>
+            
+            {% for item in order.items.all %}
+                <div class="item-row">
+                    <div class="item-name">{{ item.item.title }}</div>
+                    <div class="item-qty">×{{ item.quantity }}</div>
+                    <div class="item-price">{{ item.line_total|intcomma }}</div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Footer & Total -->
+        <div class="receipt-footer">
+            <div class="total-row">
+                <span class="total-label">جمع کل:</span>
+                <span class="total-amount">{{ order.total_price|intcomma }} تومان</span>
+            </div>
+        </div>
+
+        <!-- Thank You -->
+        <div class="thank-you">
+            از حضور شما سپاسگزاریم!<br>
+            <strong>خوش‌آمد دوباره</strong>
+        </div>
+    </div>
+
+    <script>
+        // Auto-trigger print dialog when receipt loads
+        window.addEventListener('load', function() {
+            window.print();
+        });
+    </script>
+</body>
+</html>

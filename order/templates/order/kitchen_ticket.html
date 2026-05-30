@@ -1,0 +1,212 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>کیچن - سفارش #{{ order.daily_number }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .ticket-container {
+            max-width: 300px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border: 2px solid #333;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .ticket-header {
+            text-align: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .ticket-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #d4af37;
+        }
+
+        .order-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .order-type {
+            background-color: #f0f0f0;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .order-type.takeaway {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .order-type.table {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .items-section {
+            margin: 20px 0;
+        }
+
+        .items-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-top: 2px solid #333;
+            border-bottom: 2px solid #333;
+        }
+
+        .item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #999;
+        }
+
+        .item:last-child {
+            border-bottom: none;
+        }
+
+        .item-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .item-qty {
+            text-align: center;
+            font-size: 14px;
+            background-color: #f0f0f0;
+            padding: 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .ticket-footer {
+            text-align: center;
+            padding-top: 15px;
+            border-top: 2px solid #333;
+            margin-top: 15px;
+        }
+
+        .footer-text {
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .time-prepared {
+            font-size: 11px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            .ticket-container {
+                max-width: 80mm;
+                padding: 10px;
+                box-shadow: none;
+                border: 2px solid #000;
+                margin: 0;
+            }
+        }
+
+        @media (prefers-print-colormodel: monochrome) {
+            .order-type.takeaway,
+            .order-type.table {
+                background-color: white;
+                border: 1px solid #000;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ticket-container">
+        <!-- Header -->
+        <div class="ticket-header">
+            <div class="ticket-number">#{{ order.daily_number }}</div>
+            <div class="order-info">
+                <span>{{ order.created_at|date:"H:i" }}</span>
+                <span>{{ order.created_at|date:"Y-m-d" }}</span>
+            </div>
+        </div>
+
+        <!-- Order Type Badge -->
+        <div class="order-type {% if order.is_takeaway %}takeaway{% else %}table{% endif %}">
+            {% if order.is_takeaway %}
+                🛍️ سفارش خودرویی
+            {% else %}
+                🪑 میز {{ order.table.name }}
+            {% endif %}
+        </div>
+
+        <!-- Items -->
+        {% if order.items.all %}
+            <div class="items-section">
+                <div class="items-title">📋 اقلام برای تهیه</div>
+
+                {% for item in order.items.all %}
+                    <div class="item">
+                        <div class="item-name">{{ item.item.title }}</div>
+                        <div class="item-qty">{{ item.quantity }} عدد</div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-message">
+                هیچ اقلامی برای تهیه نیست
+            </div>
+        {% endif %}
+
+        <!-- Footer -->
+        <div class="ticket-footer">
+            <div class="footer-text">کافه چینو</div>
+            <div class="time-prepared">
+                زمان چاپ: {{ order.created_at|date:"H:i:s" }}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-trigger print dialog when kitchen ticket loads
+        window.addEventListener('load', function() {
+            window.print();
+        });
+    </script>
+</body>
+</html>
