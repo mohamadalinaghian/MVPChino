@@ -1,239 +1,154 @@
+{% extends 'base.html' %}
 {% load humanize %}
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منوی {% if current_menu_type == 'VIP' %}تخصصی{% else %}روزمره{% endif %}</title>
-    <style>
-        :root {
-            --font-main: system-ui, -apple-system, Tahoma, Arial, sans-serif;
-        }
 
-        body.theme-vip {
-            --bg-body: #121212;
-            --bg-card: #1e1e1e;
-            --text-main: #f5f5f5;
-            --text-muted: #a0a0a0;
-            --accent: #d4af37; /* Gold */
-            --border-color: #333;
-            --btn-switch-bg: #1e1e1e;
-            --btn-switch-border: #d4af37;
-            --btn-switch-text: #d4af37;
-        }
+{% block content %}
+<style>
+  .theme-vip {
+    --bg-body: #121212;
+    --bg-card: #1e1e1e;
+    --text-main: #f5f5f5;
+    --text-muted: #a0a0a0;
+    --accent: #d4af37;
+    --border-color: #333;
+    --btn-switch-bg: #1e1e1e;
+    --btn-switch-border: #d4af37;
+    --btn-switch-text: #d4af37;
+  }
 
-        body.theme-eco {
-            --bg-body: #e8d888; /* Straw yellow */
-            --bg-card: #ffffff;
-            --text-main: #2c3e50;
-            --text-muted: #7f8c8d;
-            --accent: #bda43b; /* Darker straw for readability */
-            --border-color: #eae1b3;
-            --btn-switch-bg: #2c3e50;
-            --btn-switch-border: #2c3e50;
-            --btn-switch-text: #ffffff;
-        }
+  .theme-eco {
+    --bg-body: #e8d888;
+    --bg-card: #ffffff;
+    --text-main: #2c3e50;
+    --text-muted: #7f8c8d;
+    --accent: #bda43b;
+    --border-color: #eae1b3;
+    --btn-switch-bg: #2c3e50;
+    --btn-switch-border: #2c3e50;
+    --btn-switch-text: #ffffff;
+  }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+  .menu-wrapper {
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+    line-height: 1.6;
+    transition: background-color 0.3s;
+    min-height: 100vh;
+  }
 
-        body {
-            font-family: var(--font-main);
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            padding: 20px;
-            max-width: 600px;
-            margin: auto;
-            line-height: 1.6;
-            transition: background-color 0.3s;
-        }
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--accent);
+    gap: 15px;
+  }
 
-        /* Optimized Header for Mobile */
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--accent);
-            gap: 15px;
-        }
+  .title-container { display: flex; flex-direction: column; align-items: flex-start; }
+  .page-title { color: var(--accent); font-size: 20px; font-weight: bold; }
+  .en-title { font-size: 12px; color: var(--text-muted); font-weight: normal; margin-top: 2px; }
 
-        .title-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
+  .switch-menu-btn {
+    text-decoration: none;
+    background-color: var(--btn-switch-bg);
+    border: 2px solid var(--btn-switch-border);
+    color: var(--btn-switch-text);
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-size: 13px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.2s, opacity 0.2s;
+    white-space: nowrap;
+  }
+  .switch-menu-btn:active { transform: scale(0.95); }
 
-        .page-title {
-            color: var(--accent);
-            font-size: 20px;
-            font-weight: bold;
-        }
+  .category-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  }
 
-        .en-title {
-            font-size: 12px;
-            color: var(--text-muted);
-            font-weight: normal;
-            font-family: sans-serif;
-            margin-top: 2px;
-        }
+  .category-header {
+    margin-bottom: 20px;
+    border-bottom: 1px dashed var(--border-color);
+    padding-bottom: 10px;
+    text-align: center;
+  }
 
-        /* Elegant menu switch button */
-        .switch-menu-btn {
-            text-decoration: none;
-            background-color: var(--btn-switch-bg);
-            border: 2px solid var(--btn-switch-border);
-            color: var(--btn-switch-text);
-            padding: 8px 16px;
-            border-radius: 25px;
-            font-size: 13px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: transform 0.2s, opacity 0.2s;
-            white-space: nowrap;
-        }
+  .category-title { font-size: 20px; font-weight: bold; color: var(--accent); }
+  .category-desc { font-size: 13px; color: var(--text-muted); margin-top: 5px; }
 
-        .switch-menu-btn:active {
-            transform: scale(0.95);
-        }
+  .menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .menu-item:last-child { border-bottom: none; padding-bottom: 0; }
 
-        .category-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
+  .item-details { flex: 1; padding-left: 15px; }
+  .item-title { font-weight: bold; font-size: 15px; }
+  .item-desc { display: block; font-size: 12px; color: var(--text-muted); margin-top: 5px; }
+  .item-price { font-weight: bold; font-size: 14px; color: var(--text-main); white-space: nowrap; }
+  .empty-state { text-align: center; color: var(--text-muted); margin-top: 50px; }
+</style>
 
-        .category-header {
-            margin-bottom: 20px;
-            border-bottom: 1px dashed var(--border-color);
-            padding-bottom: 10px;
-            text-align: center;
-        }
-
-        .category-title {
-            font-size: 20px;
-            font-weight: bold;
-            color: var(--accent);
-        }
-
-        .category-desc {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-top: 5px;
-        }
-
-        .menu-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            padding: 15px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .menu-item:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        .item-details {
-            flex: 1;
-            padding-left: 15px;
-        }
-
-        .item-title {
-            font-weight: bold;
-            font-size: 15px;
-        }
-
-        .item-desc {
-            display: block;
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 5px;
-        }
-
-        .item-price {
-            font-weight: bold;
-            font-size: 14px;
-            color: var(--text-main);
-            white-space: nowrap;
-        }
-        
-        .empty-state {
-            text-align: center;
-            color: var(--text-muted);
-            margin-top: 50px;
-        }
-    </style>
-</head>
-<body class="{% if current_menu_type == 'VIP' %}theme-vip{% else %}theme-eco{% endif %}">
-
-    <!-- Header Section -->
-    <div class="header">
-        <!-- Brand Title Info -->
-        <div class="title-container">
-            <h1 class="page-title">
-                {% if current_menu_type == 'VIP' %}
-                    امضاء چینو
-                {% else %}
-                    چینوِ روزمره
-                {% endif %}
-            </h1>
-            <span class="en-title">
-                {% if current_menu_type == 'VIP' %}
-                    Chino Signature
-                {% else %}
-                    Chino Everyday
-                {% endif %}
-            </span>
-        </div>
-
-        <!-- Dynamic Menu Switcher Button -->
-        {% if current_menu_type == 'VIP' %}
-            <a href="{% url 'menu:menu_list' menu_type='eco' %}" class="switch-menu-btn">
-                منوی روزمره ⇄
-            </a>
-        {% else %}
-            <a href="{% url 'menu:menu_list' menu_type='vip' %}" class="switch-menu-btn">
-                منوی امضاء ⇄
-            </a>
-        {% endif %}
+<div class="menu-wrapper {% if current_menu_type == 'VIP' %}theme-vip{% else %}theme-eco{% endif %}">
+  <div class="header">
+    <div class="title-container">
+      <h1 class="page-title">
+        {% if current_menu_type == 'VIP' %}امضاء چینو{% else %}چینوِ روزمره{% endif %}
+      </h1>
+      <span class="en-title">
+        {% if current_menu_type == 'VIP' %}Chino Signature{% else %}Chino Everyday{% endif %}
+      </span>
     </div>
 
-    <!-- Category Loop (Using corrected prefetched relation: .items.all) -->
-    {% for category in categories %}
-        {% if category.items.all %}
-            <div class="category-card">
-                <div class="category-header">
-                    <h2 class="category-title">{{ category.title }}</h2>
-                    {% if category.description %}
-                        <p class="category-desc">{{ category.description }}</p>
-                    {% endif %}
-                </div>
+    {% if current_menu_type == 'VIP' %}
+      <a href="{% url 'menu:menu_list' menu_type='eco' %}" class="switch-menu-btn">منوی روزمره ⇄</a>
+    {% else %}
+      <a href="{% url 'menu:menu_list' menu_type='vip' %}" class="switch-menu-btn">منوی امضاء ⇄</a>
+    {% endif %}
+  </div>
 
-                <div class="items">
-                    {% for item in category.items.all %}
-                        <div class="menu-item">
-                            <div class="item-details">
-                                <span class="item-title">{{ item.title }}</span>
-                                {% if item.description %}
-                                    <span class="item-desc">{{ item.description }}</span>
-                                {% endif %}
-                            </div>
-                            <span class="item-price">{{ item.price|intcomma }} تومان</span>
-                        </div>
-                    {% endfor %}
-                </div>
+  {% for category in categories %}
+    {% if category.items.all %}
+      <div class="category-card">
+        <div class="category-header">
+          <h2 class="category-title">{{ category.title }}</h2>
+          {% if category.description %}
+            <p class="category-desc">{{ category.description }}</p>
+          {% endif %}
+        </div>
+
+        <div class="items">
+          {% for item in category.items.all %}
+            <div class="menu-item">
+              <div class="item-details">
+                <span class="item-title">{{ item.title }}</span>
+                {% if item.description %}
+                  <span class="item-desc">{{ item.description }}</span>
+                {% endif %}
+              </div>
+              <span class="item-price">{{ item.price|intcomma }} تومان</span>
             </div>
-        {% endif %}
-    {% empty %}
-        <p class="empty-state">در حال حاضر آیتمی در این منو وجود ندارد.</p>
-    {% endfor %}
-
-</body>
-</html>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  {% empty %}
+    <p class="empty-state">در حال حاضر آیتمی در این منو وجود ندارد.</p>
+  {% endfor %}
+</div>
+{% endblock %}

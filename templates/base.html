@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}سیستم مدیریت کافه{% endblock %}</title>
+    
+    <!-- حل مشکل خطای 404 برای Favicon -->
+    <link rel="icon" href="data:,">
+
+    <!-- اضافه کردن HTMX از CDN (برای MVP کافی است) -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+    <!-- محتوای متغیر هر صفحه اینجا قرار می‌گیرد -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- حل مشکل CSRF Token برای تمام درخواست‌های HTMX در کل پروژه -->
+    <script>
+        document.body.addEventListener('htmx:configRequest', (event) => {
+            event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+        });
+    </script>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,20 @@
+<div class="empty-order-state">
+    <div class="empty-icon">📋</div>
+    <div class="empty-title">هیچ سفارشی انتخاب نشده است</div>
+    <div class="empty-message">میز یا سفارش آنلاین را از سمت راست انتخاب کنید</div>
+</div>
+
+<style>
+    .empty-order-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        text-align: center;
+        color: var(--text-muted);
+    }
+    .empty-icon { font-size: 48px; margin-bottom: 15px; opacity: 0.3; }
+    .empty-title { font-size: 16px; font-weight: bold; margin-bottom: 10px; color: var(--text-main); }
+    .empty-message { font-size: 13px; color: var(--text-muted); }
+</style>

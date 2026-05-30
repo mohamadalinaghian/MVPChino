@@ -38,25 +38,27 @@ class Order(models.Model):
 
     # helper functions
 
-
-
     def recalculate_total(self):
         # Calculate total price directly from DB
-        total = self.items.annotate(
-            line=F('quantity') * F('unit_price_snapshot')
-        ).aggregate(total_sum=Sum('line'))['total_sum'] or 0
-        
-        self.total_price = total
-        self.save(update_fields=['total_price'])
+        total = (
+            self.items.annotate(
+                line=F("quantity") * F("unit_price_snapshot")
+            ).aggregate(total_sum=Sum("line"))["total_sum"]
+            or 0
+        )
 
-    def assign_daily_number(self):
-        if self.daily_number is not None:
-            return
-        today = timezone.localdate()
-        # Find the highest daily_number for today's orders
-        max_num = Order.objects.filter(
-            created_at__date=today
-        ).aggregate(Max('daily_number'))['daily_number__max']
-        
-        self.daily_number = (max_num or 0) + 1
-        self.save(update_fields=['daily_number'])
+        self.total_price = total
+        self.save(update_fields=["total_price"])
+
+    def get_next_daily_number(self, date=None):
+        """Get the next sequential daily_number for the given date (default: today)"""
+
+        if date is None:
+            date = timezone.now().date()
+
+        # Find max daily_number for orders created today
+        max_number = Order.objects.filter(created_at__date=date).aggregate(
+            Max("daily_number")
+        )["daily_number__max"]
+
+        return (max_number or 0) + 1
